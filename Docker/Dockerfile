@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM nvidia/cuda:11.4.0-base-ubuntu20.04
 
 ADD . /Docker
 
@@ -15,7 +15,8 @@ ENV INSTALLATION_TOOLS apt-utils \
     sudo \
     curl \
     wget \
-    software-properties-common
+    software-properties-common \
+    gnupg2
 
 ENV TOOL_PACKAGES dos2unix \
     git \
@@ -25,14 +26,21 @@ ENV TOOL_PACKAGES dos2unix \
     locales \
     python3-pip \
     make \
-    build-essential
+    build-essential \
+    nvidia-container-toolkit
 
 
 # install essential tools and packages
 RUN apt-get update -qq && \
     apt-get install ${INSTALLATION_TOOLS} -yqq && \
-    add-apt-repository ppa:git-core/ppa && \
-    apt-get update -qq && \
+    add-apt-repository ppa:git-core/ppa
+
+# 安裝nvidia驅動程式
+RUN curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add -
+RUN distribution=$(. /etc/os-release;echo $ID$VERSION_ID) && \
+    curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
+
+RUN apt-get update -qq && \
     apt-get upgrade -yqq && \
     apt-get install ${TOOL_PACKAGES} -yqq
 
@@ -56,6 +64,8 @@ RUN useradd -u $UID -m -g $NAME -G plugdev $NAME && \
 
 RUN chown -R $NAME:$NAME /home/$NAME
 RUN chown -R $NAME:$NAME /Docker
+
+
 
 # Install required python modules
 # UN pip3 install -r /Docker/requirements.txt
