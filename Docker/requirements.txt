@@ -1,2 +1,8 @@
-onnxruntime
-torch torchvision torchaudio
+numpy
+pandas
+scipy 
+matplotlib 
+scikit-learn
+torch 
+torchvision 
+torchaudio

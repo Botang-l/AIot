@@ -6,7 +6,6 @@ RUN mkdir -p /workspace/projects
   
 WORKDIR /workspace/projects
 ENV workspace=/workspace/projects
-RUN mkdir -p riscv
 ARG UID=1000
 ARG GID=1000
 ARG NAME=base
@@ -65,10 +64,12 @@ RUN useradd -u $UID -m -g $NAME -G plugdev $NAME && \
 RUN chown -R $NAME:$NAME /home/$NAME
 RUN chown -R $NAME:$NAME /Docker
 
-
-
 # Install required python modules
-# UN pip3 install -r /Docker/requirements.txt
+RUN pip3 install -r /Docker/requirements.txt
+
+# add a test file
+RUN echo "import torch" > test.py && \
+    echo "print(torch.cuda.is_available())" >> test.py
 
 # Convert .sh files from CRLF to LF
 RUN dos2unix -ic /Docker/start.sh | xargs dos2unix
