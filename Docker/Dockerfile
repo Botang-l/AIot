@@ -9,7 +9,7 @@ ENV workspace=/workspace/projects
 ARG UID=1000
 ARG GID=1000
 ARG NAME=base
-
+ARG PORT=22
 ENV INSTALLATION_TOOLS apt-utils \
     sudo \
     curl \
@@ -68,8 +68,6 @@ RUN chown -R $NAME:$NAME /Docker
 # Install required python modules
 RUN pip3 install -r /Docker/requirements.txt
 
-
-
 # Convert .sh files from CRLF to LF
 RUN dos2unix -ic /Docker/start.sh | xargs dos2unix
 RUN dos2unix -ic /Docker/env_setup.sh | xargs dos2unix
@@ -79,20 +77,11 @@ USER $NAME
 RUN echo eval /usr/local/bin/start.sh > ~/.bashrc 
 RUN echo "export PS1=\"\[\e[0;31m\]\u@\[\e[m\e[0;34m\]\h\[\e[m \e[0;32m\] \w[\!]\$\[\e[m\]  \"" >> ~/.bashrc
 
-# # run bash
-# CMD ["/bin/bash"]
-
-RUN echo "$ssh_usr:$ssh_pwd" >> ~/passwdfile && \
-    chpasswd -c SHA512 < ~/passwdfile && \
-    rm ~/passwdfile && \
-    sed -i "s/#Port.*/Port 22/" /etc/ssh/sshd_config && \
-    sed -i "s/#PermitRootLogin.*/PermitRootLogin yes/" /etc/ssh/sshd_config && \
-    sed -i "s/#PasswordAuthentication.*/PasswordAuthentication yes/" /etc/ssh/sshd_config
 
 # expose the port 22(which is the default port of ssh)
 EXPOSE 22
 
-# Start the SSH service and run bash
-ENTRYPOINT service ssh restart && /bin/bash
+# run bash
+CMD ["/bin/bash"]
 
 
