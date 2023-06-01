@@ -23,7 +23,7 @@ rm Docker/env_setup.sh
 
 
 if [[ $OSTYPE == "msys" ]]; then
-    winpty docker run --privileged -v "/$PWD"/projects:/workspace/projects --name $COURSE --gpus all -it $tag bash
+    winpty docker run --privileged -p $PORT:$PORT -v "/$PWD"/projects:/workspace/projects --name $COURSE --gpus all -it $tag bash
 else
-    docker run --privileged -v "$PWD"/projects:/workspace/projects --name $COURSE  --gpus all -it $tag bash
+    docker run --privileged -p $PORT:$PORT -v "$PWD"/projects:/workspace/projects --name $COURSE  --gpus all -it $tag bash
 fi

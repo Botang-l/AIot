@@ -20,6 +20,9 @@ git config --global core.editor vim
 
 sudo chown -R "$(id -un)":"$(id -un)" /workspace
 
+# add a test file
+RUN echo "import torch" > test.py && \
+echo "print(torch.cuda.is_available())" >> test.py
 
 welcome_message
 echo the workspace is created.

@@ -4,10 +4,13 @@ GIT_EMAIL=e24096409@gs.ncku.edu.tw
 GITLAB_LOGIN=Haouo
 
 # docker configuration
-COURSE=aiot
+COURSE=aiot-server
 
 # project parameters, must be consistent with gitlab URLs
-COURSE_GITLAB="aias-spring-2023"
+COURSE_GITLAB=""
 
 # normal project list
 PROJECT=""
+
+# port
+PORT=22
